@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "desktop-commander": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@wonderwhy-er/desktop-commander"
+      ]
+    },
+    "weather-server": {
+      "command": "node",
+      "args": [
+        "-e",
+        "const http = require('http'); const url = require('url'); const SERVER_URL = 'http://mcp-test-alb-1077360550.ap-northeast-2.elb.amazonaws.com'; process.stdin.on('data', async (data) => { try { const lines = data.toString().split('\\n').filter(line => line.trim()); for (const line of lines) { const message = JSON.parse(line); if (message.method === 'initialize') { process.stdout.write(JSON.stringify({ jsonrpc: '2.0', id: message.id, result: { protocolVersion: '2024-11-05', capabilities: { tools: {} }, serverInfo: { name: 'weather-server', version: '1.0.0' } } }) + '\\n'); } else if (message.method === 'tools/list') { process.stdout.write(JSON.stringify({ jsonrpc: '2.0', id: message.id, result: { tools: [{ name: 'get_forecast', description: 'Get weather forecast for a location', inputSchema: { type: 'object', properties: { latitude: { type: 'number', description: 'Latitude coordinate' }, longitude: { type: 'number', description: 'Longitude coordinate' } }, required: ['latitude', 'longitude'] } }, { name: 'get_alerts', description: 'Get weather alerts for a US state', inputSchema: { type: 'object', properties: { state: { type: 'string', description: 'US state code (e.g., CA, TX)' } }, required: ['state'] } }] } }) + '\\n'); } else if (message.method === 'tools/call') { const toolName = message.params.name; const args = message.params.arguments; let endpoint; if (toolName === 'get_forecast') { endpoint = '/mcp/get_forecast'; } else if (toolName === 'get_alerts') { endpoint = '/mcp/get_alerts'; } if (endpoint) { const postData = JSON.stringify(args); const parsedUrl = url.parse(SERVER_URL); const options = { hostname: parsedUrl.hostname, port: parsedUrl.port || 80, path: endpoint, method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(postData) } }; const req = http.request(options, (res) => { let responseData = ''; res.on('data', (chunk) => { responseData += chunk; }); res.on('end', () => { try { const result = JSON.parse(responseData); process.stdout.write(JSON.stringify({ jsonrpc: '2.0', id: message.id, result: { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] } }) + '\\n'); } catch (e) { process.stdout.write(JSON.stringify({ jsonrpc: '2.0', id: message.id, result: { content: [{ type: 'text', text: responseData }] } }) + '\\n'); } }); }); req.on('error', (error) => { process.stdout.write(JSON.stringify({ jsonrpc: '2.0', id: message.id, error: { code: -1, message: error.message } }) + '\\n'); }); req.write(postData); req.end(); } } } } catch (error) { console.error('Error:', error); } });"
+      ]
+    }
+  }
+}
