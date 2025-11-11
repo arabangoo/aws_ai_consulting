@@ -1,6 +1,9 @@
 ### [arabangoo.com]
 https://arabangoo.com/
 <br/><br/>
+### [AWS GenAI 공개 고객 사례집]   
+https://antique-skipjack-fdd.notion.site/AWS-GenAI-17876a71128680798755e8b90bd1a89f
+<br/><br/>
 ### [AI Model & API Providers Analysis]   
 https://artificialanalysis.ai/
 <br/><br/>
@@ -12,18 +15,3 @@ https://roadmap.sh/ai-engineer
 <br/><br/>
 ### [Generative AI Handbook]
 https://genai-handbook.github.io/   
-<br/>
-### [MIT Deep Learning]   
-https://udlbook.github.io/udlbook/      
-<br/>
-### [Stanford HAI AI Index]
-https://hai.stanford.edu/ai-index
-<br/><br/>
-### [Humanity's Last Exam]
-https://agi.safe.ai/
-<br/><br/>
-### [AI latest Research Papers]
-https://arxiv.org/list/cs.AI/recent
-<br/><br/>
-### [Connected Papers]
-https://www.connectedpapers.com/
